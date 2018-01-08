@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        body {
+            background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoX0K53xBSbpEAD-ZrWo7GsatpwXOvrv8_WktvquI4Qqixgna4);
+            background-size: 100%;
+        }
+
+        button {
+            color: white;
+            background-color: #0f79d3;
+            border-radius: 5px;
+            width: 150px;
+            height: 50px;
+            margin-left: 350px;
+            margin-top: 30px;
+        }
+
+        #textinfo {
+            background-color: #dff1da;
+            color: #82a87f;
+            width: 500px;
+            height: 100px;
+            border-radius: 10px;
+            position: absolute;
+            margin-left: 200px;
+            margin-top: 50px;
+            font-size: 20px;
+            padding-left: 10px;
+            padding-top:5px;
+            display:none;
+            overflow:auto;
+        }
+
+        input {
+            height: 30px;
+            width: 500px;
+            margin-left: 200px;
+            border-radius: 5px;
+            font-size:25px;
+
+        }
+
+        div {
+            margin-left: 300px;
+            margin-top: 150px;
+        }
+
+        h1 {
+            font-size: 100px;
+            position: center;
+        }
+
+        p {
+            font-size: 30px;
+            margin-left: 250px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>What's The Weather?</h1>
+        <p>Enter the name of a city.</p>
+
+        <input id="city" type="text" placeholder=" city" />
+        <br />
+        <button onclick="submit()">Submut</button>
+
+        <div id="textinfo"></div>
+
+    </div>
+
+    <script>
+
+        function submit()
+        {
+            var xhttp = new XMLHttpRequest();
+
+            xhttp.onreadystatechange = function () {
+
+                document.getElementById("textinfo").style.display = "block";
+                
+                if (this.readyState === 4 && this.status === 200) {
+                    var allinfo = this.responseText;
+                    var jallinfo = JSON.parse(allinfo);
+                    var temp = jallinfo.main.temp - 273.15;
+             
+                    var tempMin = jallinfo.main.temp_min - 273.15;
+                    var tempMax = jallinfo.main.temp_max - 273.15;
+                    var description = jallinfo.weather[0].description;
+                    var country = jallinfo.sys.country;
+                    var windspeed = jallinfo.wind.speed;
+
+                    var infoFormat = "Country :" + country + " city :" + city + "<br>" + "Temp :" + "max " + tempMax + " °c" + " - min " + tempMax + " °c" + "<br>" + "Weather :" + description + "<br>" + "Wind speed :" + windspeed;
+                
+                    document.getElementById("textinfo").innerHTML = infoFormat;
+                   
+                }
+                else {
+                    document.getElementById("textinfo").innerHTML ="the city could not be found";
+                }
+            }
+        
+
+        var city = document.getElementById("city").value;
+
+        var url = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&APPID=6cd964c960417478af0c50c2ccc2a150";
+
+        xhttp.open("GET", url);
+        xhttp.send();
+    
+        }
+
+    </script>
+
+</body>
+</html>
